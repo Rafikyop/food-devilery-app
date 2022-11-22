@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import { Badge, Button, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { actionDeletePaletasAsync, actionFillPaletasAsync } from "../../redux/actions/paletasActions";
+import {
+  actionDeletePaletasAsync,
+  actionFillPaletasAsync,
+} from "../../redux/actions/paletasActions";
 
 const Home = () => {
   const { paletas } = useSelector((store) => store.paletasStore);
@@ -17,7 +20,7 @@ const Home = () => {
     <div>
       {paletas && paletas.length ? (
         paletas.map((paleta, index) => (
-          <Card key={index} style={{ width: "18rem" }}>
+          <Card key={index} style={{ width: "18rem", border: "none" }}>
             <Card.Img variant="top" src={paleta.image} />
             <Badge bg="warning" text="dark">
               {paleta.price}
@@ -35,9 +38,13 @@ const Home = () => {
                 >
                   Edit
                 </Button>
-                <Button size="sm" variant="danger" onClick={() => {
-                    dispatch(actionDeletePaletasAsync(paleta))
-                  }}>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => {
+                    dispatch(actionDeletePaletasAsync(paleta));
+                  }}
+                >
                   Delete
                 </Button>
               </div>

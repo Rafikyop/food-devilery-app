@@ -85,20 +85,12 @@ export const inputList = [
 
 export const category = [
   {
-    label: "paleta de agua",
+    label: "Restaurante",
     value: 1,
   },
   {
-    label: "paleta de crema",
+    label: "Platos",
     value: 2,
-  },
-  {
-    label: "paleta mixta",
-    value: 3,
-  },
-  {
-    label: "paleta con relleno",
-    value: 4,
   },
 ];
 export const loginProvider = [
