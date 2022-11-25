@@ -1,146 +1,38 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-  signInWithPopup,
-} from "firebase/auth";
-import { auth } from "../../firebase/firebaseConfig";
-// import { google } from "../../firebase/firebaseConfig";
+import { userTypes } from "../types/userType";
+// import { auth } from "../../firebase/firebaseConfig";
 
-import { userTypes } from "../types/userTypes";
-
-export const actionRegisterAsync = ({
-  email,
-  password,
-  name,
-  avatar,
-  phoneNumber,
-}) => {
+export const actionSignPhoneAsync = (codigo) => {
+  //retorna una solución
   return (dispatch) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async ({ user }) => {
-        console.log(user);
-        const { accessToken } = user.auth.currentUser;
-        await updateProfile(auth.currentUser, {
-          displayName: name,
-          photoURL: avatar,
-          phoneNumber,
-        });
-        dispatch(
-          actionRegisterSync({
-            email,
-            name,
-            accessToken,
-            photoURL: avatar,
-            phoneNumber,
-            error: false,
-          })
-        );
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-        dispatch(actionRegisterSync({ error: true, errorMessage }));
-      });
-  };
-};
-const actionRegisterSync = (user) => {
-  return {
-    type: userTypes.USER_REGISTER,
-    payload: { ...user },
-  };
-};
-
-export const actionLoginAsync = ({ email, password }) => {
-  return (dispatch) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        const { displayName, accessToken, photoURL, phoneNumber } =
-          user.auth.currentUser;
-        dispatch(
-          actionLoginSync({
-            email,
-            name: displayName,
-            accessToken,
-            avatar: photoURL,
-            phoneNumber,
-            error: false,
-          })
-        );
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-        dispatch(
-          actionLoginSync({
-            email,
-            error: true,
-            errorMessage,
-          })
-        );
-      });
-  };
-};
-
-export const loginProviderAsync = (provider) => {
-  return (dispatch) => {
-    signInWithPopup(auth, provider)
+    const confirmationResult = window.confirmationResult; //valor guardado en window confirmation del login almacenado en una constante
+    confirmationResult.confirm(codigo) //promesa
       .then((result) => {
-        const user = result.user;
-        console.log(user);
-        const { displayName, accessToken, photoURL, phoneNumber } =
-          user.auth.currentUser;
+        const user = result.user //user igual a lo que hay en la propiedad user de result
+        console.log(user)
+        const { displayName, email, accessToken, phoneNumber, photoURL, uid } =user.auth.currentUser
         dispatch(
-          actionLoginSync({
-            email: user.email,
+          actionSignPhoneSync({
             name: displayName,
+            email,
             accessToken,
-            avatar: photoURL,
             phoneNumber,
+            avatar: photoURL,
+            uid,
             error: false,
           })
         );
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-        dispatch(
-          actionLoginSync({
-            error: true,
-            errorMessage,
-          })
-        );
-      });
-  };
-};
-
-export const actionLoginSync = (user) => {
-  return {
-    type: userTypes.USER_LOGIN,
-    payload: { ...user },
-  };
-};
-
-export const actionLogoutAsync = () => {
-  return (dispatch) => {
-    signOut(auth)
-      .then(() => {
-        dispatch(actionLogoutSync());
       })
       .catch((error) => {
         console.log(error);
+        dispatch(actionSignPhoneSync({ error: true, errorMessage: error.message}));
       });
   };
 };
-const actionLogoutSync = () => {
+
+export const actionSignPhoneSync = (user) => {
+  //retorna una solución
   return {
-    type: userTypes.USER_LOGOUT,
+    type: userTypes.VALIDATE_PHONE,
+    payload:{ ...user },
   };
 };

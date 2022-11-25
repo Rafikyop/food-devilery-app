@@ -1,16 +1,15 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { paletasReducer } from "../reducers/paletasReducer";
-import { userReducer } from "../reducers/userReducer";
+import { configureStore} from "@reduxjs/toolkit";
+import { userReducer } from "../reducers/userReducers";
+
 const reducer = {
-  userStore: userReducer,
-  paletasStore: paletasReducer
+    userStore: userReducer,
 };
 const store = configureStore({
-  reducer,
-  devTool: process.env.NODE_ENV !== "production",
-  middleware: (getDefaultMiddleware) =>
+    reducer,
+    devTools: process.env.NODE_ENV !== "production",
+    middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
+        serializableCheck: false,
     }),
-});
+})
 export default store;
